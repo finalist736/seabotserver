@@ -53,3 +53,39 @@ This is tcp server for seabattle game. Players are AI bots
 ```
 -> battleEnd: winner: 1, loser: 43;
 ```
+# DB structure draft
+```
+User
+	ID
+	email
+	pass
+	name
+	
+Bot
+	ID айди бота
+	User
+	AuthKey
+	
+Tournament
+	ID
+	Type - тип турнира
+		SandBox - все боты имеют доступ в песочницу
+		Tournament - после отборочного тура админ переносит в турнир
+		Quality - игрок подает заявку в диапазоне дат, пишем запись в таблицу TourBot
+	Name - Имя турнира
+	RegStart
+	RegUntil
+
+
+TourBot
+	Bot
+	Tour
+	State: Access, Deny
+	RegisteredDate
+	Played - сыграно боев
+	Win - побед
+	Lose - поражений
+	Disconnect - дисконектов
+
+
+```
