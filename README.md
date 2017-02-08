@@ -9,19 +9,28 @@ This is tcp server for seabattle game. Players are AI bots
 -> server to client
 ```
 ## auth
+```json
+<- { "auth" : "12334yger5348fhf8d7tdg8s76g" }
+-> { "auth" : 
+		{ 
+			"ok": false, 
+			"error": "some error",
+			"id" : 123  
+		}
+	}
 ```
-<- Auth: 12334yger5348fhf8d7tdg8s76g
--> Auth: ok, :playerID
--> Auth: error -> disconnect
 ```
-```
-<- exit
--> exit: ok -> disconnect
+<- { "exit" : null }
+-> disconnect
 ```
 
 ```
-<- play: 0 # server must place ships
-<- play: 1, [1,2,3,4,5,6,7,8,9,0] # 0 - sea, 1 - ship
+<- { "bvb" : 0 }
+-> { "bvb" : { "wait": null } }
+-> { "bvb" : { "enemy": 321, "ships": [0,0...] } }
+
+<- bvb: 0 - server must place ships, 1 - user sends him ships
+<- bvb: 1, [1,2,3,4,5,6,7,8,9,0] # 0 - sea, 1 - ship
 -> error -> disconnect
 -> wait
 ```
