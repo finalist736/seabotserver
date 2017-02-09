@@ -1,6 +1,7 @@
 package seabotserver
 
 import (
+	"encoding/json"
 	"net"
 )
 
@@ -9,18 +10,27 @@ type TcpBot struct {
 	ID      int64
 	AuthKey string
 
-	Send   chan []byte
-	Done   chan bool
-	Buffer []byte
+	SendChannel chan []byte
+	Done        chan bool
+	Buffer      []byte
+	BufferLen   int
 }
 
 func NewTcpBot(c net.Conn) *TcpBot {
 	bot := &TcpBot{}
 	bot.Conn = c
-	bot.Send = make(chan []byte)
+	bot.SendChannel = make(chan []byte)
 	bot.Done = make(chan bool)
 	bot.Buffer = make([]byte, 1024)
 	return bot
+}
+
+func (s *TcpBot) Send(d interface{}) {
+	ba, err := json.Marshal(d)
+	if err != nil {
+		return
+	}
+	s.SendChannel <- ba
 }
 
 type TcpServer struct {

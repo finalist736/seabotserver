@@ -16,7 +16,7 @@ func sender(p *seabotserver.TcpBot) {
 		select {
 		case <-p.Done:
 			return
-		case msg := <-p.Send:
+		case msg := <-p.SendChannel:
 			var total int
 			needToSend := len(msg)
 			for {
@@ -40,7 +40,6 @@ func sender(p *seabotserver.TcpBot) {
 func handle(p *seabotserver.TcpBot) {
 	defer func() { fmt.Printf("handler close: %v\n", p.RemoteAddr()) }()
 	for {
-
 		select {
 		case <-p.Done:
 			return
@@ -55,7 +54,8 @@ func handle(p *seabotserver.TcpBot) {
 				//fmt.Printf("zero read\n")
 				continue
 			}
-			fmt.Printf("received: %s\n", p.Buffer)
+			p.BufferLen = n
+			fmt.Printf("received: %s\n", p.Buffer[0:n])
 			router.Dispatch(p)
 		}
 	}
