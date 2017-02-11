@@ -10,10 +10,11 @@ type TcpBot struct {
 	ID      int64
 	AuthKey string
 
+	Battle interface{}
+
 	SendChannel chan []byte
 	Done        chan bool
 	Buffer      []byte
-	BufferLen   int
 }
 
 func NewTcpBot(c net.Conn) *TcpBot {
@@ -21,7 +22,7 @@ func NewTcpBot(c net.Conn) *TcpBot {
 	bot.Conn = c
 	bot.SendChannel = make(chan []byte)
 	bot.Done = make(chan bool)
-	bot.Buffer = make([]byte, 1024)
+	bot.Buffer = make([]byte, 0)
 	return bot
 }
 
