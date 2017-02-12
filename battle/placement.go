@@ -169,6 +169,10 @@ func checkShip(pole *[10][10]int, y, x, palubs int32, vertical bool) bool {
 
 func FormatShips() *[10]*seabotserver.ShipPlaces {
 	ships := &[10]*seabotserver.ShipPlaces{}
+
+	//for ()
+
+	return ships
 }
 
 func PrintPole(pole *[10][10]int) {
