@@ -21,8 +21,8 @@ type Battle struct {
 	BattleChannel chan *BattleChannelData
 
 	CurrentTurnID int64
-	Pole1         [10][10]int
-	Pole2         [10][10]int
+	Pole1         *[10][10]int
+	Pole2         *[10][10]int
 }
 
 var rnd *rand.Rand
