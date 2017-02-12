@@ -9,7 +9,7 @@ type FBBvb struct {
 }
 
 type FBTurn struct {
-	Field []int `json:"field"`
+	Shot [2]int `json:"shot"`
 }
 
 type FromBot struct {
@@ -33,11 +33,16 @@ type TBTurn struct {
 }
 
 type TBBvb struct {
-	Wait  int         `json:"wait,omitempty"`
-	ID    int64       `json:"id,omitempty"`
-	Name  string      `json:"name,omitempty"`
-	Ships interface{} `json:"ships,omitempty"`
+	Wait  int       `json:"wait,omitempty"`
+	ID    int64     `json:"id,omitempty"`
+	Name  string    `json:"name,omitempty"`
+	Ships *[100]int `json:"ships,omitempty"`
 }
+
+//type ShipPlaces struct {
+//	Palubs int
+//	Places [][2]int
+//}
 
 type TBAuth struct {
 	OK    bool   `json:"ok"`

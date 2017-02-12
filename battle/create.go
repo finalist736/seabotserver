@@ -36,12 +36,12 @@ func Create(q1, q2 *seabotserver.QueueData) {
 	// to first bot
 	tb.Bvb.ID = q2.Bot.ID
 	tb.Bvb.Name = fmt.Sprintf("bot_%d", tb.Bvb.ID)
-	tb.Bvb.Ships = nil
+	tb.Bvb.Ships = FormatShips(nb.Pole1)
 	q1.Bot.Send(tb)
 	// to second bot
 	tb.Bvb.ID = q1.Bot.ID
 	tb.Bvb.Name = fmt.Sprintf("bot_%d", tb.Bvb.ID)
-	tb.Bvb.Ships = nil
+	tb.Bvb.Ships = FormatShips(nb.Pole2)
 	q2.Bot.Send(tb)
 
 	q1.Bot.Battle = nb

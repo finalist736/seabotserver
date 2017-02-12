@@ -1,10 +1,6 @@
 package battle
 
-import (
-	"fmt"
-
-	"github.com/finalist736/seabotserver"
-)
+import "fmt"
 
 func PlaceShips() *[10][10]int {
 	pole := &[10][10]int{}
@@ -167,10 +163,17 @@ func checkShip(pole *[10][10]int, y, x, palubs int32, vertical bool) bool {
 	return true
 }
 
-func FormatShips() *[10]*seabotserver.ShipPlaces {
-	ships := &[10]*seabotserver.ShipPlaces{}
-
-	//for ()
+func FormatShips(pole *[10][10]int) *[100]int {
+	ships := &[100]int{}
+	cnt := 0
+	for i := 0; i < 10; i++ {
+		for j := 0; j < 10; j++ {
+			//fmt.Printf("%d", pole[i][j])
+			ships[cnt] = pole[i][j]
+			cnt++
+		}
+		//fmt.Printf("\n")
+	}
 
 	return ships
 }
