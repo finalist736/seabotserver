@@ -33,12 +33,12 @@ This is tcp server for seabattle game. Players are AI bots
 <- { "bvb" : { "place": 0 } } 
 // игрок расставляет корабли на поле
 // сервер должен проверить и допустить или не допустить расстановку
-<- { "bvb" : { "place":  1, "ships" : [0,0,0....]	}
+<- { "bvb" : { "place":  1, "ships" : [0,0,0,0,0,0,0]	}
 }
 // no bots yet, wait
 -> { "bvb" : { "wait": 1 } }
 // start battle, opponent bot info
--> { "bvb" : { "id": 321, "name": "dopinfo", "ships": [0,0...] } }
+-> { "bvb" : { "id": 321, "name": "dopinfo", "ships": [0,0,0,0] } }
 0 0 0 0 0 0 0 0 0 1
 0 4 0 0 0 0 0 0 0 0
 0 4 0 0 0 0 3 0 0 2
@@ -55,16 +55,20 @@ This is tcp server for seabattle game. Players are AI bots
 // сервер предлагает игроку 123 сделать ход
 -> { "turn" : { "id" : 123 } }
 
-// Бот сделал ход, выстрел пришелся в точку (А2) - 0,0
+// Бот сделал ход, выстрел пришелся в точку 
+// (А1) - 0,0
+// (Б8) - 1,7
+// (А3) - 0,2
+// (Г4) - 3,3
 // АБВГДЕ....
 // 0123456789
 // первая цифра это номер ряда, вторая цифра номер колонки
 <- { "turn" : { "shot": [y, x] } }
 
 // результат выстрела, -1 - мимо, 1 - попал, 2 - убил
--> { "turn" : { "result": 0 } }
+-> { "turn" : { "result": -1 } }
 
--> { "turn" : {"opponent": { "shot": [y, x], "result": 1 } } }<!>
+-> { "turn" : {"opponent": { "shot": [y, x], "result": 1 } } }
 ```
 ##### GOTO GAME
 ```
@@ -73,7 +77,7 @@ This is tcp server for seabattle game. Players are AI bots
 ```
 ## Battle end
 ```json
--> { "end": { "winner": 123, "opponent": {...ships...} } }
+-> { "end": { "winner": 123, "opponent": [0,0,0] } }
 ```
 # DB structure draft
 ```

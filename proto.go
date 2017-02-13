@@ -22,10 +22,11 @@ type FromBot struct {
 // TO BOT = TB
 
 type ToBot struct {
-	Auth *TBAuth `json:"auth,omitempty"`
-	Bvb  *TBBvb  `json:"bvb,omitempty"`
-	Turn *TBTurn `json:"turn,omitempty"`
-	End  *TBEnd  `json:"end,omitempty"`
+	Auth  *TBAuth  `json:"auth,omitempty"`
+	Bvb   *TBBvb   `json:"bvb,omitempty"`
+	Turn  *TBTurn  `json:"turn,omitempty"`
+	End   *TBEnd   `json:"end,omitempty"`
+	Error *TBError `json:"error,omitempty"`
 }
 
 type TBEnd struct {
@@ -54,4 +55,8 @@ type TBAuth struct {
 	OK    bool   `json:"ok"`
 	Error string `json:"error"`
 	ID    int64  `json:"id"`
+}
+
+type TBError struct {
+	Error string `json:"error"`
 }

@@ -32,6 +32,11 @@ func (s *Battle) Listener() {
 			if data.Turn == nil || data.Bot == nil {
 				continue
 			}
+			if data.Turn.Shot[0] < 0 || data.Turn.Shot[0] > 9 ||
+				data.Turn.Shot[1] < 0 || data.Turn.Shot[1] > 9 {
+				data.Bot.Send(&seabotserver.ToBot{Error: &seabotserver.TBError{Error: "incorrect point"}})
+				continue
+			}
 			var field *int
 			var opppole *[10][10]int
 			if data.Bot.ID == s.Bot1.ID {
