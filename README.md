@@ -22,31 +22,18 @@ This is tcp server for seabattle game. Players are AI bots
 		}
 	}
 ```
-```
+```json
 <- { "exit" : true }
 -> disconnect
 ```
 
-```
+```json
 // bot versus bot
 // сервер сам расставляет корабли
 <- { "bvb" : { "place": 0 } } 
 // игрок расставляет корабли на поле
 // сервер должен проверить и допустить или не допустить расстановку
-<- { "bvb" : { "place":  1, "ships" : 
-		{
-			"ship4" :  [ [0, 0],[0, 1],[0, 2],[0, 3] ], 
-			"ship31" : [ [0, 0],[0, 1],[0, 2] ], 
-			"ship32" : [ [0, 0],[0, 1],[0, 2] ], 
-			"ship21" : [ [0, 0],[0, 1] ], 
-			"ship22" : [ [0, 0],[0, 1] ], 
-			"ship23" : [ [0, 0],[0, 1] ], 
-			"ship11" : [ [0, 0] ], 
-			"ship12" : [ [0, 0] ], 
-			"ship13" : [ [0, 0] ], 
-			"ship14" : [ [0, 0] ]
-		}
-	}
+<- { "bvb" : { "place":  1, "ships" : [0,0,0....]	}
 }
 // no bots yet, wait
 -> { "bvb" : { "wait": 1 } }
@@ -64,7 +51,7 @@ This is tcp server for seabattle game. Players are AI bots
 
 ```
 ##### LOOP: GAME
-```
+```json
 // сервер предлагает игроку 123 сделать ход
 -> { "turn" : { "id" : 123 } }
 
@@ -72,12 +59,12 @@ This is tcp server for seabattle game. Players are AI bots
 // АБВГДЕ....
 // 0123456789
 // первая цифра это номер ряда, вторая цифра номер колонки
-<- { "turn" : { "shot": [0, 1] } }
+<- { "turn" : { "shot": [y, x] } }
 
 // результат выстрела, -1 - мимо, 1 - попал, 2 - убил
 -> { "turn" : { "result": 0 } }
 
--> { "turn" : {"opponent": { "shot": [0, 1], "result": 1 } } }<!>
+-> { "turn" : {"opponent": { "shot": [y, x], "result": 1 } } }<!>
 ```
 ##### GOTO GAME
 ```
@@ -85,7 +72,7 @@ This is tcp server for seabattle game. Players are AI bots
 // after timeout -> lose
 ```
 ## Battle end
-```
+```json
 -> { "end": { "winner": 123, "opponent": {...ships...} } }
 ```
 # DB structure draft

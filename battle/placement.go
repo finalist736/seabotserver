@@ -179,12 +179,19 @@ func FormatShips(pole *[10][10]int) *[100]int {
 }
 
 func PrintPole(pole *[10][10]int) {
-	fmt.Printf("XXXXXXXXXX\n")
+	fmt.Printf("__________\n")
 	for i := 0; i < 10; i++ {
 		for j := 0; j < 10; j++ {
-			fmt.Printf("%d", pole[i][j])
+			f := pole[i][j]
+			if f == 0 {
+				fmt.Printf("0")
+			} else if f < 0 {
+				fmt.Printf("X")
+			} else {
+				fmt.Printf("%c", 35)
+			}
 		}
-		fmt.Printf("\n")
+		fmt.Printf("|\n")
 	}
-	fmt.Printf("XXXXXXXXXX\n")
+	fmt.Printf("----------\n")
 }

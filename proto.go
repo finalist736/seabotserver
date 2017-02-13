@@ -25,11 +25,22 @@ type ToBot struct {
 	Auth *TBAuth `json:"auth,omitempty"`
 	Bvb  *TBBvb  `json:"bvb,omitempty"`
 	Turn *TBTurn `json:"turn,omitempty"`
+	End  *TBEnd  `json:"end,omitempty"`
+}
+
+type TBEnd struct {
+	Winner int64 `json:"winner"`
 }
 
 type TBTurn struct {
-	ID     int64 `json:"id,omitempty"`
-	Result int64 `json:"result,omitempty"`
+	ID       int64           `json:"id,omitempty"`
+	Result   int64           `json:"result,omitempty"`
+	Opponent *TBOpponentTurn `json:"opponent,omitempty"`
+}
+
+type TBOpponentTurn struct {
+	Shot   [2]int `json:"shot"`
+	Result int64  `json:"result,omitempty"`
 }
 
 type TBBvb struct {
@@ -38,11 +49,6 @@ type TBBvb struct {
 	Name  string    `json:"name,omitempty"`
 	Ships *[100]int `json:"ships,omitempty"`
 }
-
-//type ShipPlaces struct {
-//	Palubs int
-//	Places [][2]int
-//}
 
 type TBAuth struct {
 	OK    bool   `json:"ok"`
