@@ -7,6 +7,7 @@ func PlaceShips() *[10][10]int {
 
 	var x, y, dir int32
 	var ok bool
+	var failsCount int
 
 	for i := 0; i < 10; i++ {
 		switch i {
@@ -36,6 +37,7 @@ func PlaceShips() *[10][10]int {
 					if ok {
 						break
 					}
+					failsCount++
 				}
 				setShip(pole, y, x, 3, true)
 			} else {
@@ -47,6 +49,7 @@ func PlaceShips() *[10][10]int {
 					if ok {
 						break
 					}
+					failsCount++
 				}
 				setShip(pole, y, x, 3, false)
 			}
@@ -62,6 +65,7 @@ func PlaceShips() *[10][10]int {
 					if ok {
 						break
 					}
+					failsCount++
 				}
 				setShip(pole, y, x, 2, true)
 			} else {
@@ -73,6 +77,7 @@ func PlaceShips() *[10][10]int {
 					if ok {
 						break
 					}
+					failsCount++
 				}
 				setShip(pole, y, x, 2, false)
 			}
@@ -85,12 +90,13 @@ func PlaceShips() *[10][10]int {
 				if ok {
 					break
 				}
+				failsCount++
 			}
 			setShip(pole, y, x, 1, false)
 		}
 	}
 
-	//fmt.Printf("pole: %v\n", pole)
+	fmt.Printf("failsCount: %v\n", failsCount)
 
 	return pole
 }

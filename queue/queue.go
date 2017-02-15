@@ -1,8 +1,6 @@
 package queue
 
 import (
-	"fmt"
-
 	"github.com/finalist736/seabotserver"
 	"github.com/finalist736/seabotserver/battle"
 )
@@ -20,7 +18,7 @@ func channelHandler() {
 	for {
 		select {
 		case data = <-qChan:
-			fmt.Printf("setting queue goroutine: %+v\n", data)
+			//fmt.Printf("setting queue goroutine: %+v\n", data)
 			switch data.Exit {
 			case true:
 				if first == nil {

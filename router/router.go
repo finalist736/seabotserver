@@ -53,6 +53,9 @@ func Dispatch(bot *seabotserver.TcpBot) {
 		if fbot.Turn == nil {
 			return
 		}
+		if bot.Battle == nil {
+			return
+		}
 		btl := bot.Battle.(*battle.Battle)
 		if btl == nil {
 			return

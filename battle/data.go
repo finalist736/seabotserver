@@ -10,6 +10,7 @@ import (
 type BattleChannelData struct {
 	Bot  *seabotserver.TcpBot
 	Turn *seabotserver.FBTurn
+	Exit bool
 }
 
 type Battle struct {

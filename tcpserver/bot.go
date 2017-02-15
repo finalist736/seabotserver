@@ -2,8 +2,11 @@ package tcpserver
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/finalist736/seabotserver"
+	"github.com/finalist736/seabotserver/battle"
+	"github.com/finalist736/seabotserver/queue"
 	"github.com/finalist736/seabotserver/router"
 )
 
@@ -55,24 +58,34 @@ func sender(p *seabotserver.TcpBot) {
 
 func handle(p *seabotserver.TcpBot) {
 	defer func() { fmt.Printf("handler close: %v\n", p.RemoteAddr()) }()
+	defer func() { queue.Exit(p) }()
+	defer func() {
+		if p.Battle == nil {
+			return
+		}
+		btl := p.Battle.(*battle.Battle)
+		if btl == nil {
+			return
+		}
+		btl.Exit(p)
+	}()
 
 	tmp_buffer := make([]byte, 4)
 	var numbytes, tmp_numbytes, size, atempts int
 	var err error
 	numbytes = 0
-
 	for {
 		select {
 		case <-p.Done:
 			return
 		default:
-			//p.SetReadDeadline(time.Now().Add(time.Second * 3))
-
+			// set read deadline for pvp battle or pve battle
 			for {
 				tmp_numbytes, err = p.Read(tmp_buffer)
 				if err != nil {
-					//fmt.Println("size read error: ", err)
-					fmt.Printf("4 bytes read error: %s\n", err.Error())
+					if err != io.EOF {
+						fmt.Printf("4 bytes read error: %s\n", err.Error())
+					}
 					p.Done <- true
 					return
 				}
@@ -101,7 +114,9 @@ func handle(p *seabotserver.TcpBot) {
 			for {
 				tmp_numbytes, err = p.Read(p.Buffer[numbytes:])
 				if err != nil {
-					fmt.Printf("data read error: %s\n", err.Error())
+					if err != io.EOF {
+						fmt.Printf("data read error: %s\n", err.Error())
+					}
 					p.Done <- true
 					return
 				}
@@ -112,6 +127,7 @@ func handle(p *seabotserver.TcpBot) {
 				break
 			}
 			router.Dispatch(p)
+			//p.SetReadDeadline(time.Now().Add(time.Second * 5))
 		}
 	}
 }

@@ -18,6 +18,8 @@ func Create(q1, q2 *seabotserver.QueueData) {
 		//PrintPole(nb.Pole1)
 	} else {
 		// need to check placement by bot
+		// feature! place ships by server anyway
+		nb.Pole1 = PlaceShips()
 	}
 
 	// second bot's ships
@@ -28,6 +30,8 @@ func Create(q1, q2 *seabotserver.QueueData) {
 	} else {
 		// need to check
 		// if places incorrect then break battle and disconnect bots;
+		// feature! place ships by server anyway
+		nb.Pole2 = PlaceShips()
 	}
 
 	// response init
