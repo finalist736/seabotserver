@@ -63,5 +63,16 @@ func Create(q1, q2 *seabotserver.QueueData) {
 	q1.Bot.Send(tb)
 	q2.Bot.Send(tb)
 
+	nb.Log.Sides[0] = &seabotserver.LogSides{}
+	nb.Log.Sides[1] = &seabotserver.LogSides{}
+
+	nb.Log.Sides[0].ID = nb.Bot1.ID
+	nb.Log.Sides[0].Name = "test"
+	nb.Log.Sides[0].Sea = FormatShips(nb.Pole1)
+
+	nb.Log.Sides[1].ID = nb.Bot2.ID
+	nb.Log.Sides[1].Name = "test2"
+	nb.Log.Sides[1].Sea = FormatShips(nb.Pole2)
+
 	go nb.Listener()
 }

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/finalist736/seabotserver"
+	"github.com/finalist736/seabotserver/logs"
 )
 
 func (s *Battle) Handle(bot *seabotserver.TcpBot, turn *seabotserver.FBTurn) {
@@ -65,6 +66,12 @@ func (s *Battle) Listener() {
 				}
 				if *field == 0 {
 					tb.Turn.Result = -1
+					*field = -10
+				} else if *field == -10 {
+					// calc misscount
+					// and ban bot when count == 5
+				} else if *field > -5 && *field < 0 {
+					// shot in dead ship
 				} else {
 					// check for ship dead and send 2
 					tb.Turn.Result = 1
@@ -87,10 +94,10 @@ func (s *Battle) Listener() {
 						opponent.Send(tbEnd)
 
 						fmt.Println("POLE 1")
-						PrintPole(s.Pole1)
+						PrintPole(s.Pole1, s.Bot1.ID)
 
 						fmt.Println("POLE 2")
-						PrintPole(s.Pole2)
+						PrintPole(s.Pole2, s.Bot2.ID)
 
 						s.Bot1.Battle = nil
 						s.Bot2.Battle = nil
@@ -98,11 +105,21 @@ func (s *Battle) Listener() {
 						s.Bot1.Done <- true
 						s.Bot2.Done <- true
 
+						// save battle result to log
+						s.Log.Winner = tbEnd.End.Winner
+						logs.SaveToFile(s.Log)
 						// statistics save to DB
 						return
 					}
 
 				}
+				// save to log
+				s.Log.Turns = append(s.Log.Turns,
+					&seabotserver.LogTurn{
+						data.Bot.ID,
+						data.Turn.Shot,
+						tb.Turn.Result})
+
 				// send shot result
 				data.Bot.Send(tb)
 				// send opponent shot result

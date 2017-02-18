@@ -24,12 +24,16 @@ type Battle struct {
 	CurrentTurnID int64
 	Pole1         *[10][10]int
 	Pole2         *[10][10]int
+
+	Log *seabotserver.LogBattle
 }
 
 var rnd *rand.Rand
 
 func NewBattle() *Battle {
-	return &Battle{BattleChannel: make(chan *BattleChannelData)}
+	return &Battle{
+		BattleChannel: make(chan *BattleChannelData),
+		Log:           &seabotserver.LogBattle{}}
 }
 
 func init() {

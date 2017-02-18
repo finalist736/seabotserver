@@ -36,13 +36,13 @@ type TBEnd struct {
 
 type TBTurn struct {
 	ID       int64           `json:"id,omitempty"`
-	Result   int64           `json:"result,omitempty"`
+	Result   int             `json:"result,omitempty"`
 	Opponent *TBOpponentTurn `json:"opponent,omitempty"`
 }
 
 type TBOpponentTurn struct {
 	Shot   [2]int `json:"shot"`
-	Result int64  `json:"result,omitempty"`
+	Result int    `json:"result,omitempty"`
 }
 
 type TBBvb struct {
