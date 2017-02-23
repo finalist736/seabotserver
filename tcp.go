@@ -20,8 +20,8 @@ type TcpBot struct {
 func NewTcpBot(c net.Conn) *TcpBot {
 	bot := &TcpBot{}
 	bot.Conn = c
-	bot.SendChannel = make(chan []byte)
-	bot.Done = make(chan bool)
+	bot.SendChannel = make(chan []byte, 2)
+	bot.Done = make(chan bool, 2)
 	bot.Buffer = make([]byte, 0)
 	return bot
 }

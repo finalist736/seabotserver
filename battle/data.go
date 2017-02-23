@@ -39,7 +39,7 @@ var rnd *rand.Rand
 
 func NewBattle() *Battle {
 	return &Battle{
-		BattleChannel: make(chan *BattleChannelData),
+		BattleChannel: make(chan *BattleChannelData, 2),
 		Log:           &seabotserver.LogBattle{}}
 }
 

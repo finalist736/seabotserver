@@ -36,6 +36,17 @@ func (s *Battle) Listener() {
 
 			switch data.Exit {
 			case true:
+				// need to close this battle!
+				errMsg := &seabotserver.ToBot{
+					Error: &seabotserver.TBError{Error: "player disconnected"}}
+				if s.Bot1.ID == data.Bot.ID {
+					s.Bot2.Send(errMsg)
+					s.Bot2.Done <- true
+				} else {
+					s.Bot1.Send(errMsg)
+					s.Bot1.Done <- true
+				}
+				return
 
 			case false:
 				//fmt.Printf("some data from bot: %d\n\t%+v\n", data.Bot.ID, data.Turn)
