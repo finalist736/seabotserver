@@ -13,6 +13,11 @@ type BattleChannelData struct {
 	Exit bool
 }
 
+type Ship struct {
+	Count int
+	Place [][2]int
+}
+
 type Battle struct {
 	ID int64
 
@@ -23,7 +28,9 @@ type Battle struct {
 
 	CurrentTurnID int64
 	Pole1         *[10][10]int
+	Ships1        *[10]*Ship
 	Pole2         *[10][10]int
+	Ships2        *[10]*Ship
 
 	Log *seabotserver.LogBattle
 }

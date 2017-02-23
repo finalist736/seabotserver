@@ -14,25 +14,30 @@ func Create(q1, q2 *seabotserver.QueueData) {
 	// first bot's ships
 	if q1.Bvb.Place == 0 {
 		// place ships by server
-		nb.Pole1 = PlaceShips()
+		nb.Pole1, nb.Ships1 = PlaceShips()
 		//PrintPole(nb.Pole1)
 	} else {
 		// need to check placement by bot
 		// feature! place ships by server anyway
-		nb.Pole1 = PlaceShips()
+		nb.Pole1, nb.Ships1 = PlaceShips()
 	}
 
 	// second bot's ships
 	if q2.Bvb.Place == 0 {
 		// place ships by server
-		nb.Pole2 = PlaceShips()
+		nb.Pole2, nb.Ships2 = PlaceShips()
 		//PrintPole(nb.Pole2)
 	} else {
 		// need to check
 		// if places incorrect then break battle and disconnect bots;
 		// feature! place ships by server anyway
-		nb.Pole2 = PlaceShips()
+		nb.Pole2, nb.Ships2 = PlaceShips()
 	}
+
+	//	for _, ship := range nb.Ships1 {
+	//		fmt.Printf("%+v\n", ship)
+	//	}
+	//fmt.Printf("%+v\n", nb.Ships2)
 
 	// response init
 	tb := seabotserver.ToBot{}

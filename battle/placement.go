@@ -2,14 +2,16 @@ package battle
 
 import "fmt"
 
-func PlaceShips() *[10][10]int {
+func PlaceShips() (*[10][10]int, *[10]*Ship) {
 	pole := &[10][10]int{}
+	ships := &[10]*Ship{}
 
 	var x, y, dir int32
 	var ok bool
 	var failsCount int
 
 	for i := 0; i < 10; i++ {
+		ship := &Ship{}
 		switch i {
 		case 0:
 			// place 4 palubs ships
@@ -18,12 +20,12 @@ func PlaceShips() *[10][10]int {
 				// vertical
 				x = rnd.Int31n(10)
 				y = rnd.Int31n(7)
-				setShip(pole, y, x, 4, true)
+				setShip(pole, y, x, 4, true, ship)
 			} else {
 				// horizontal
 				x = rnd.Int31n(7)
 				y = rnd.Int31n(10)
-				setShip(pole, y, x, 4, false)
+				setShip(pole, y, x, 4, false, ship)
 			}
 		case 1, 2:
 			// 3palubs
@@ -39,7 +41,7 @@ func PlaceShips() *[10][10]int {
 					}
 					failsCount++
 				}
-				setShip(pole, y, x, 3, true)
+				setShip(pole, y, x, 3, true, ship)
 			} else {
 				// horizontal
 				for {
@@ -51,7 +53,7 @@ func PlaceShips() *[10][10]int {
 					}
 					failsCount++
 				}
-				setShip(pole, y, x, 3, false)
+				setShip(pole, y, x, 3, false, ship)
 			}
 		case 3, 4, 5:
 			// 2 palubs
@@ -67,7 +69,7 @@ func PlaceShips() *[10][10]int {
 					}
 					failsCount++
 				}
-				setShip(pole, y, x, 2, true)
+				setShip(pole, y, x, 2, true, ship)
 			} else {
 				// horizontal
 				for {
@@ -79,7 +81,7 @@ func PlaceShips() *[10][10]int {
 					}
 					failsCount++
 				}
-				setShip(pole, y, x, 2, false)
+				setShip(pole, y, x, 2, false, ship)
 			}
 		default:
 			// 1palubs
@@ -92,18 +94,21 @@ func PlaceShips() *[10][10]int {
 				}
 				failsCount++
 			}
-			setShip(pole, y, x, 1, false)
+			setShip(pole, y, x, 1, false, ship)
 		}
+		ships[i] = ship
 	}
 
 	fmt.Printf("failsCount: %v\n", failsCount)
-
-	return pole
+	return pole, ships
 }
 
-func setShip(pole *[10][10]int, y, x, palubs int32, vertical bool) {
+func setShip(pole *[10][10]int, y, x, palubs int32, vertical bool, ship *Ship) {
 	palubsName := palubs
+	ship.Count = int(palubs)
+	ship.Place = make([][2]int, 0)
 	for palubs > 0 {
+		ship.Place = append(ship.Place, [2]int{int(y), int(x)})
 		pole[y][x] = int(palubsName)
 		if vertical {
 			y++

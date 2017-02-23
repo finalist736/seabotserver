@@ -55,14 +55,17 @@ func (s *Battle) Listener() {
 				}
 				var field *int
 				var opppole *[10][10]int
+				var oppShips *[10]*Ship
 				if data.Bot.ID == s.Bot1.ID {
 					field = &s.Pole2[data.Turn.Shot[0]][data.Turn.Shot[1]]
 					opppole = s.Pole2
 					opponent = s.Bot2
+					oppShips = s.Ships2
 				} else {
 					field = &s.Pole1[data.Turn.Shot[0]][data.Turn.Shot[1]]
 					opppole = s.Pole1
 					opponent = s.Bot1
+					oppShips = s.Ships1
 				}
 				if *field == 0 {
 					tb.Turn.Result = -1
@@ -72,9 +75,10 @@ func (s *Battle) Listener() {
 					// and ban bot when count == 5
 				} else if *field > -5 && *field < 0 {
 					// shot in dead ship
+					// and ban bot when count == 5
 				} else {
 					// check for ship dead and send 2
-					tb.Turn.Result = 1
+					tb.Turn.Result = checkShipDestroy(oppShips, data.Turn.Shot, *field)
 					*field *= -1
 
 					// check for battle end
