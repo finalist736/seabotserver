@@ -31,7 +31,7 @@ type ToBot struct {
 
 type TBEnd struct {
 	Winner int64     `json:"winner"`
-	Ships  *[100]int `json:"ships,omitempty"`
+	Ships  *[100]int `json:"opponent,omitempty"`
 }
 
 type TBTurn struct {
