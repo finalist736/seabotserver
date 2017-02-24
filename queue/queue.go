@@ -48,7 +48,7 @@ func channelHandler() {
 					if first.Bot.ID == data.Bot.ID {
 						continue
 					}
-					go battle.Create(first, data)
+					battle.Create(first, data)
 					first = nil
 				}
 			}

@@ -1,7 +1,6 @@
 package battle
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/finalist736/seabotserver"
