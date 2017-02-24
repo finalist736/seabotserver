@@ -108,11 +108,11 @@ func (s *Battle) Listener() {
 						}
 						opponent.Send(tbEnd)
 
-						fmt.Println("POLE 1")
-						PrintPole(s.Pole1, s.Bot1.ID)
+						//fmt.Println("POLE 1")
+						//PrintPole(s.Pole1, s.Bot1.ID)
 
-						fmt.Println("POLE 2")
-						PrintPole(s.Pole2, s.Bot2.ID)
+						//fmt.Println("POLE 2")
+						//PrintPole(s.Pole2, s.Bot2.ID)
 
 						s.Bot1.Battle = nil
 						s.Bot2.Battle = nil
