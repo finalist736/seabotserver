@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/finalist736/seabotserver"
-	"github.com/finalist736/seabotserver/logs"
 )
 
 func (s *Battle) Handle(bot *seabotserver.TcpBot, turn *seabotserver.FBTurn) {
@@ -129,7 +128,7 @@ func (s *Battle) Listener() {
 
 						// save battle result to log
 						s.Log.Winner = tbEnd.End.Winner
-						logs.SaveToFile(s.Log)
+						//logs.SaveToFile(s.Log)
 						// statistics save to DB
 						return
 					}
