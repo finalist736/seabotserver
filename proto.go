@@ -12,21 +12,31 @@ type FBTurn struct {
 	Shot [2]int `json:"shot"`
 }
 
+type FBProfile struct {
+	Info int `json:"info"`
+}
+
 type FromBot struct {
-	Auth string  `json:"auth"`
-	Exit bool    `json:"exit"`
-	Bvb  *FBBvb  `json:"bvb"`
-	Turn *FBTurn `json:"turn"`
+	Auth    string     `json:"auth"`
+	Exit    bool       `json:"exit"`
+	Bvb     *FBBvb     `json:"bvb"`
+	Turn    *FBTurn    `json:"turn"`
+	Profile *FBProfile `json:"profile"`
 }
 
 // TO BOT = TB
 
 type ToBot struct {
-	Auth  *TBAuth  `json:"auth,omitempty"`
-	Bvb   *TBBvb   `json:"bvb,omitempty"`
-	Turn  *TBTurn  `json:"turn,omitempty"`
-	End   *TBEnd   `json:"end,omitempty"`
-	Error *TBError `json:"error,omitempty"`
+	Auth    *TBAuth    `json:"auth,omitempty"`
+	Bvb     *TBBvb     `json:"bvb,omitempty"`
+	Turn    *TBTurn    `json:"turn,omitempty"`
+	End     *TBEnd     `json:"end,omitempty"`
+	Error   *TBError   `json:"error,omitempty"`
+	Profile *TBProfile `json:"profile,omitempty"`
+}
+
+type TBProfile struct {
+	Gnum int `json:"gnum"`
 }
 
 type TBEnd struct {

@@ -3,6 +3,7 @@ package router
 import (
 	"encoding/json"
 	"fmt"
+	"runtime"
 	"sync/atomic"
 
 	"github.com/finalist736/seabotserver"
@@ -48,6 +49,10 @@ func Dispatch(bot *seabotserver.TcpBot) {
 			bot.Done <- true
 			queue.Exit(bot)
 			return
+		} else if fbot.Profile != nil {
+			prof := &seabotserver.TBProfile{}
+			prof.Gnum = runtime.NumGoroutine()
+			bot.Send(&seabotserver.ToBot{Profile: prof})
 		}
 	} else {
 		if fbot.Turn == nil {
