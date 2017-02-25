@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/finalist736/seabotserver"
@@ -54,13 +55,20 @@ func (s *Battle) Listener() {
 				}
 
 				if s.CurrentTurnID != data.Bot.ID {
-					data.Bot.Send(&seabotserver.ToBot{Error: &seabotserver.TBError{Error: "incorrect turn"}})
+					data.Bot.Send(
+						&seabotserver.ToBot{
+							Error: &seabotserver.TBError{
+								Error: fmt.Sprintf("not your turn! now turn bot id: %d. but your bot id: %d",
+									s.CurrentTurnID, data.Bot.ID)}})
 					continue
 				}
 
 				if data.Turn.Shot[0] < 0 || data.Turn.Shot[0] > 9 ||
 					data.Turn.Shot[1] < 0 || data.Turn.Shot[1] > 9 {
-					data.Bot.Send(&seabotserver.ToBot{Error: &seabotserver.TBError{Error: "incorrect point"}})
+					data.Bot.Send(
+						&seabotserver.ToBot{
+							Error: &seabotserver.TBError{
+								Error: "incorrect point"}})
 					continue
 				}
 				var field *int
