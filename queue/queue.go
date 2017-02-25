@@ -1,6 +1,8 @@
 package queue
 
 import (
+	"fmt"
+
 	"github.com/finalist736/seabotserver"
 	"github.com/finalist736/seabotserver/battle"
 )
@@ -18,9 +20,10 @@ func channelHandler() {
 	for {
 		select {
 		case data = <-qChan:
-			//fmt.Printf("setting queue goroutine: %+v\n", data)
+			fmt.Printf("1 queue: %v\n", data.Bot.ID)
 			switch data.Exit {
 			case true:
+				fmt.Printf("2 queue exit: %v\n", data.Bot.ID)
 				if first == nil {
 					continue
 				}
@@ -32,12 +35,13 @@ func channelHandler() {
 				}
 			case false:
 				// set to queue!
-
 				if data.Bot == nil || data.Bvb == nil {
 					continue
 				}
+				fmt.Printf("2 queue set: %v\n", data.Bot.ID)
 				// queue is empty let set bot!
 				if first == nil {
+					fmt.Printf("3 queue first: %v\n", data.Bot.ID)
 					first = data
 
 					tb := seabotserver.ToBot{}
@@ -45,10 +49,12 @@ func channelHandler() {
 					tb.Bvb.Wait = 1
 					data.Bot.Send(tb)
 				} else {
+					fmt.Printf("4 queue second: %v\n", data.Bot.ID)
 					if first.Bot.ID == data.Bot.ID {
 						continue
 					}
 					battle.Create(first, data)
+					fmt.Printf("4 queue created : %v + %v\n", data.Bot.ID, first.Bot.ID)
 					first = nil
 				}
 			}
