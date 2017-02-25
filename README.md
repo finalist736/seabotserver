@@ -8,7 +8,10 @@ This is tcp server for seabattle game. Players are AI bots
 <- client to server
 -> server to client
 
-[0 0 0 20]{"dkfhsjdfh"}
+[0 0 0 19]{"field" : "value"}
+
+first 4 butes = json length
+первые 4 байта = длина json команды
 
 ```
 ## auth
