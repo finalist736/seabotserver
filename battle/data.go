@@ -1,11 +1,6 @@
 package battle
 
-import (
-	"math/rand"
-	"time"
-
-	"github.com/finalist736/seabotserver"
-)
+import "github.com/finalist736/seabotserver"
 
 type BattleChannelData struct {
 	Bot  *seabotserver.TcpBot
@@ -35,14 +30,8 @@ type Battle struct {
 	Log *seabotserver.LogBattle
 }
 
-var rnd *rand.Rand
-
 func NewBattle() *Battle {
 	return &Battle{
 		BattleChannel: make(chan *BattleChannelData, 2),
 		Log:           &seabotserver.LogBattle{}}
-}
-
-func init() {
-	rnd = rand.New(rand.NewSource(time.Now().Unix()))
 }

@@ -1,6 +1,9 @@
 package battle
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
 func PlaceShips() (*[10][10]int, *[10]*Ship) {
 	pole := &[10][10]int{}
@@ -15,26 +18,26 @@ func PlaceShips() (*[10][10]int, *[10]*Ship) {
 		switch i {
 		case 0:
 			// place 4 palubs ships
-			dir = rnd.Int31n(2)
+			dir = rand.Int31n(2)
 			if dir == 0 {
 				// vertical
-				x = rnd.Int31n(10)
-				y = rnd.Int31n(7)
+				x = rand.Int31n(10)
+				y = rand.Int31n(7)
 				setShip(pole, y, x, 4, true, ship)
 			} else {
 				// horizontal
-				x = rnd.Int31n(7)
-				y = rnd.Int31n(10)
+				x = rand.Int31n(7)
+				y = rand.Int31n(10)
 				setShip(pole, y, x, 4, false, ship)
 			}
 		case 1, 2:
 			// 3palubs
-			dir = rnd.Int31n(2)
+			dir = rand.Int31n(2)
 			if dir == 0 {
 				// vertical
 				for {
-					x = rnd.Int31n(10)
-					y = rnd.Int31n(8)
+					x = rand.Int31n(10)
+					y = rand.Int31n(8)
 					ok = checkShip(pole, y, x, 3, true)
 					if ok {
 						break
@@ -45,8 +48,8 @@ func PlaceShips() (*[10][10]int, *[10]*Ship) {
 			} else {
 				// horizontal
 				for {
-					x = rnd.Int31n(8)
-					y = rnd.Int31n(10)
+					x = rand.Int31n(8)
+					y = rand.Int31n(10)
 					ok = checkShip(pole, y, x, 3, false)
 					if ok {
 						break
@@ -57,12 +60,12 @@ func PlaceShips() (*[10][10]int, *[10]*Ship) {
 			}
 		case 3, 4, 5:
 			// 2 palubs
-			dir = rnd.Int31n(2)
+			dir = rand.Int31n(2)
 			if dir == 0 {
 				// vertical
 				for {
-					x = rnd.Int31n(10)
-					y = rnd.Int31n(9)
+					x = rand.Int31n(10)
+					y = rand.Int31n(9)
 					ok = checkShip(pole, y, x, 2, true)
 					if ok {
 						break
@@ -73,8 +76,8 @@ func PlaceShips() (*[10][10]int, *[10]*Ship) {
 			} else {
 				// horizontal
 				for {
-					x = rnd.Int31n(9)
-					y = rnd.Int31n(10)
+					x = rand.Int31n(9)
+					y = rand.Int31n(10)
 					ok = checkShip(pole, y, x, 2, false)
 					if ok {
 						break
@@ -86,8 +89,8 @@ func PlaceShips() (*[10][10]int, *[10]*Ship) {
 		default:
 			// 1palubs
 			for {
-				x = rnd.Int31n(10)
-				y = rnd.Int31n(10)
+				x = rand.Int31n(10)
+				y = rand.Int31n(10)
 				ok = checkShip(pole, y, x, 1, false)
 				if ok {
 					break
