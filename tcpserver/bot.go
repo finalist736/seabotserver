@@ -45,7 +45,7 @@ func sender(p *seabotserver.TcpBot) {
 					fmt.Printf("read error: %s\n", err.Error())
 					// TODO
 					// logging
-					p.Done <- true
+					p.Disconnect()
 					return
 				}
 				if total == needToSend {
@@ -86,7 +86,7 @@ func handle(p *seabotserver.TcpBot) {
 					if err != io.EOF {
 						fmt.Printf("4 bytes read error: %s\n", err.Error())
 					}
-					p.Done <- true
+					p.Disconnect()
 					return
 				}
 				numbytes += tmp_numbytes
@@ -117,7 +117,7 @@ func handle(p *seabotserver.TcpBot) {
 					if err != io.EOF {
 						fmt.Printf("data read error: %s\n", err.Error())
 					}
-					p.Done <- true
+					p.Disconnect()
 					return
 				}
 				numbytes += tmp_numbytes

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"math/rand"
 	"os"
@@ -8,31 +9,32 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/finalist736/seabotserver/config"
 	"github.com/finalist736/seabotserver/tcpserver"
 	"github.com/pkg/profile"
 )
 
+var config_path *string = flag.String("config", "../config.json", "config file path")
+
 func main() {
 
-	now := time.Now()
-	//	cfg := profile.Config{
-	//		CPUProfile: true,
-	//		MemProfile: true,
-	//		ProfilePath: fmt.Sprintf("./nav_profile_%d_%d_%d_%d_%d", // store profiles in current directory
-	//			now.Day(), now.Month(),
-	//			now.Hour(), now.Minute(), now.Second()),
-	//		NoShutdownHook: true, // do not hook SIGINT
-	//	}
-	profilePath := fmt.Sprintf("./nav_profile_%d_%d_%d_%d_%d", // store profiles in current directory
-		now.Day(), now.Month(),
-		now.Hour(), now.Minute(), now.Second())
-	p := profile.Start(profile.CPUProfile, profile.ProfilePath(profilePath), profile.NoShutdownHook)
-	defer p.Stop()
+	flag.Parse()
+	config.SetConfigFile(*config_path)
+	conf := config.GetConfiguration()
 
-	rand.Seed(time.Now().UnixNano())
+	now := time.Now()
+	if conf.Profiling {
+		profilePath := fmt.Sprintf("./nav_profile_%d_%d_%d_%d_%d", // store profiles in current directory
+			now.Day(), now.Month(),
+			now.Hour(), now.Minute(), now.Second())
+		p := profile.Start(profile.CPUProfile, profile.ProfilePath(profilePath), profile.NoShutdownHook)
+		defer p.Stop()
+	}
+
+	rand.Seed(now.UnixNano())
 
 	s := tcpserver.NewServer()
-	err := s.StartListen(":11000")
+	err := s.StartListen(conf.Port)
 	if err != nil {
 		panic(err)
 	}

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/finalist736/seabotserver"
+	"github.com/finalist736/seabotserver/logs"
 )
 
 func (s *Battle) Handle(bot *seabotserver.TcpBot, turn *seabotserver.FBTurn) {
@@ -32,33 +33,32 @@ func (s *Battle) Listener() {
 	for {
 		select {
 		case data = <-s.BattleChannel:
-
 			switch data.Exit {
 			case true:
 				// need to close this battle!
 				errMsg := &seabotserver.ToBot{
 					Error: &seabotserver.TBError{Error: "player disconnected"}}
-				if s.Bot1.ID == data.Bot.ID {
+				if s.Bot1.DBBot.ID == data.Bot.DBBot.ID {
 					s.Bot2.Send(errMsg)
-					s.Bot2.Done <- true
+					s.Bot2.Disconnect()
 				} else {
 					s.Bot1.Send(errMsg)
-					s.Bot1.Done <- true
+					s.Bot1.Disconnect()
 				}
 				return
 
 			case false:
-				//fmt.Printf("some data from bot: %d\n\t%+v\n", data.Bot.ID, data.Turn)
+				//fmt.Printf("some data from bot: %d\n\t%+v\n", data.Bot.DBBot.ID, data.Turn)
 				if data.Turn == nil || data.Bot == nil {
 					continue
 				}
 
-				if s.CurrentTurnID != data.Bot.ID {
+				if s.CurrentTurnID != data.Bot.DBBot.ID {
 					data.Bot.Send(
 						&seabotserver.ToBot{
 							Error: &seabotserver.TBError{
 								Error: fmt.Sprintf("not your turn! now turn bot id: %d. but your bot id: %d",
-									s.CurrentTurnID, data.Bot.ID)}})
+									s.CurrentTurnID, data.Bot.DBBot.ID)}})
 					continue
 				}
 
@@ -73,7 +73,7 @@ func (s *Battle) Listener() {
 				var field *int
 				var opppole *[10][10]int
 				var oppShips *[10]*Ship
-				if data.Bot.ID == s.Bot1.ID {
+				if data.Bot.DBBot.ID == s.Bot1.DBBot.ID {
 					field = &s.Pole2[data.Turn.Shot[0]][data.Turn.Shot[1]]
 					opppole = s.Pole2
 					opponent = s.Bot2
@@ -104,7 +104,7 @@ func (s *Battle) Listener() {
 						// end battle
 						tbEnd := seabotserver.ToBot{}
 						tbEnd.End = &seabotserver.TBEnd{}
-						tbEnd.End.Winner = data.Bot.ID
+						tbEnd.End.Winner = data.Bot.DBBot.ID
 						tbEnd.End.Ships = FormatShips(opppole)
 						data.Bot.Send(tbEnd)
 						if opppole == s.Pole1 {
@@ -123,12 +123,12 @@ func (s *Battle) Listener() {
 						s.Bot1.Battle = nil
 						s.Bot2.Battle = nil
 
-						s.Bot1.Done <- true
-						s.Bot2.Done <- true
+						s.Bot1.Disconnect()
+						s.Bot2.Disconnect()
 
 						// save battle result to log
 						s.Log.Winner = tbEnd.End.Winner
-						//logs.SaveToFile(s.Log)
+						logs.SaveToMongoDB(s.Log)
 						// statistics save to DB
 						return
 					}
@@ -137,7 +137,7 @@ func (s *Battle) Listener() {
 				// save to log
 				s.Log.Turns = append(s.Log.Turns,
 					&seabotserver.LogTurn{
-						data.Bot.ID,
+						data.Bot.DBBot.ID,
 						data.Turn.Shot,
 						tb.Turn.Result})
 
@@ -151,11 +151,11 @@ func (s *Battle) Listener() {
 
 				// send next turn
 				if tb.Turn.Result == -1 {
-					tbNextTurn.Turn.ID = opponent.ID
-					s.CurrentTurnID = opponent.ID
+					tbNextTurn.Turn.ID = opponent.DBBot.ID
+					s.CurrentTurnID = opponent.DBBot.ID
 				} else {
-					tbNextTurn.Turn.ID = data.Bot.ID
-					s.CurrentTurnID = data.Bot.ID
+					tbNextTurn.Turn.ID = data.Bot.DBBot.ID
+					s.CurrentTurnID = data.Bot.DBBot.ID
 				}
 				s.Bot1.Send(tbNextTurn)
 				s.Bot2.Send(tbNextTurn)

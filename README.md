@@ -19,9 +19,10 @@ first 4 butes = json length
 <- { "auth" : "12334yger5348fhf8d7tdg8s76g" }
 -> { "auth" : 
 		{ 
-			"ok": false, 
-			"error": "some error",
-			"id" : 123  
+			"ok": 		false, 
+			"error": 	"some error",
+			"id" : 		123 // bot ID
+			"userid" : 	11 // user ID 
 		}
 	}
 ```

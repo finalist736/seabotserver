@@ -1,0 +1,18 @@
+{
+	"Profiling": false,
+	"Port": ":11000",
+	"DB": {
+		"Host": "localhost",
+		"User": "dbuser",
+		"Pass": "",
+		"Name": "dbname",
+		"Port": 3306
+	},
+	"Mongo": {
+		"Host": "localhost",
+		"User": "user",
+		"Pass": "",
+		"Name": "dbname",
+		"Port": 27017
+	}
+}

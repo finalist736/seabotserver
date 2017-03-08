@@ -7,8 +7,7 @@ import (
 
 type TcpBot struct {
 	net.Conn
-	ID      int64
-	AuthKey string
+	DBBot *DBBot
 
 	Battle interface{}
 
@@ -19,6 +18,7 @@ type TcpBot struct {
 
 func NewTcpBot(c net.Conn) *TcpBot {
 	bot := &TcpBot{}
+	bot.DBBot = &DBBot{}
 	bot.Conn = c
 	bot.SendChannel = make(chan []byte, 2)
 	bot.Done = make(chan bool, 2)
@@ -32,6 +32,14 @@ func (s *TcpBot) Send(d interface{}) {
 		return
 	}
 	s.SendChannel <- ba
+}
+
+func (s *TcpBot) SendError(err string) {
+	s.Send(&ToBot{Error: &TBError{Error: err}})
+}
+
+func (s *TcpBot) Disconnect() {
+	s.Done <- true
 }
 
 type TcpServer struct {

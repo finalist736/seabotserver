@@ -66,6 +66,7 @@ type TBAuth struct {
 	OK    bool   `json:"ok"`
 	Error string `json:"error"`
 	ID    int64  `json:"id"`
+	User  int64  `json:"userid"`
 }
 
 type TBError struct {

@@ -4,39 +4,42 @@ import (
 	"encoding/json"
 	"fmt"
 	"runtime"
-	"sync/atomic"
 
 	"github.com/finalist736/seabotserver"
 	"github.com/finalist736/seabotserver/battle"
+	"github.com/finalist736/seabotserver/database/dbsql"
 	"github.com/finalist736/seabotserver/queue"
 )
-
-var id int64
 
 func Dispatch(bot *seabotserver.TcpBot) {
 
 	fbot := &seabotserver.FromBot{}
 	err := json.Unmarshal(bot.Buffer, fbot)
 	if err != nil {
-		bot.Done <- true
+		bot.Disconnect()
 		fmt.Printf("json parse error: %s", err)
 		return
 	}
 
-	if bot.ID == 0 {
+	if bot.DBBot.ID == 0 {
 		if fbot.Auth == "" {
 			fmt.Printf("authkey empty: %s", bot.RemoteAddr())
 			// send error to bot
 			return
 		} else {
-			// TODO
-			// DATABASE AUTH AND ERROR
-			tb := seabotserver.ToBot{}
+			dbBotService := dbsql.NewDBBotService()
+			bot.DBBot, err = dbBotService.Auth(fbot.Auth)
+			if err != nil {
+				bot.SendError("auth error, register on http://finalistx.com/ for new key")
+				bot.Disconnect()
+				return
+			}
+
+			tb := &seabotserver.ToBot{}
 			tb.Auth = &seabotserver.TBAuth{}
 			tb.Auth.OK = true
-			tb.Auth.ID = atomic.AddInt64(&id, 1)
-			// remember bot id
-			bot.ID = tb.Auth.ID
+			tb.Auth.ID = bot.DBBot.ID
+			tb.Auth.User = bot.DBBot.User
 
 			bot.Send(tb)
 		}
@@ -46,7 +49,7 @@ func Dispatch(bot *seabotserver.TcpBot) {
 			fmt.Printf("setting to queue: %+v\n", fbot)
 			queue.Handle(bot, fbot.Bvb)
 		} else if fbot.Exit {
-			bot.Done <- true
+			bot.Disconnect()
 			queue.Exit(bot)
 			return
 		} else if fbot.Profile != nil {
