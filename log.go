@@ -17,3 +17,7 @@ type LogTurn struct {
 	Shot   [2]int `json:"shot"`
 	Result int    `json:"result"`
 }
+
+type LoggingService interface {
+	Store(*LogBattle) error
+}

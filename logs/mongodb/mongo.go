@@ -1,4 +1,4 @@
-package logs
+package mongodb
 
 import (
 	"fmt"
@@ -8,8 +8,14 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-func SaveToMongoDB(l *seabotserver.LogBattle) {
-	// mongodb://<dbuser>:<dbpassword>@ds145289.mlab.com:45289/navigation
+type LoggingService struct {
+}
+
+func NewLoggingService() seabotserver.LoggingService {
+	return &LoggingService{}
+}
+
+func (*LoggingService) Store(l *seabotserver.LogBattle) error {
 	conf := config.GetConfiguration()
 	connectString := fmt.Sprintf("mongodb://%s:%s@%s:%d/%s",
 		conf.Mongo.User,
@@ -21,17 +27,15 @@ func SaveToMongoDB(l *seabotserver.LogBattle) {
 	session, err := mgo.Dial(connectString)
 	if err != nil {
 		fmt.Printf("mongo connection error: %s", err.Error())
-		return
+		return err
 	}
 	defer session.Close()
-
-	// Optional. Switch the session to a monotonic behavior.
-	session.SetMode(mgo.Monotonic, true)
 
 	c := session.DB(conf.Mongo.Name).C("games")
 	err = c.Insert(l)
 	if err != nil {
 		fmt.Printf("mongo insert error: %s", err.Error())
-		return
+		return err
 	}
+	return nil
 }
