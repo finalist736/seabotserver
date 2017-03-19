@@ -20,6 +20,7 @@ type FromBot struct {
 	Auth    string     `json:"auth"`
 	Exit    bool       `json:"exit"`
 	Bvb     *FBBvb     `json:"bvb"`
+	Bvr     *FBBvb     `json:"bvr"`
 	Turn    *FBTurn    `json:"turn"`
 	Profile *FBProfile `json:"profile"`
 }

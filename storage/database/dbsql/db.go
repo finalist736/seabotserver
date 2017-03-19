@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/finalist736/seabotserver/config"
+	"github.com/finalist736/seabotserver/storage/config"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gocraft/dbr"
 )

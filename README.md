@@ -32,6 +32,13 @@ first 4 butes = json length
 ```
 
 ```json
+// bot versus random
+// if you want to debug your code, use this command.
+<- { "bvr" : { "place": 0 } }
+-> { "bvr" : { "id": -1, "name": "bot_-1", "ships": [0,0,0,0...] } }
+```
+
+```json
 // bot versus bot
 // сервер сам расставляет корабли
 <- { "bvb" : { "place": 0 } } 

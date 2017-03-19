@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/finalist736/seabotserver"
-	"github.com/finalist736/seabotserver/config"
+	"github.com/finalist736/seabotserver/storage/config"
 	"gopkg.in/mgo.v2"
 )
 
@@ -35,6 +35,19 @@ func (*LoggingService) Store(l *seabotserver.LogBattle) error {
 	err = c.Insert(l)
 	if err != nil {
 		fmt.Printf("mongo insert error: %s", err.Error())
+		return err
+	}
+	// Index
+	index := mgo.Index{
+		Key:        []string{"battle"},
+		Unique:     false,
+		DropDups:   false,
+		Background: true,
+		Sparse:     true,
+	}
+	err = c.EnsureIndex(index)
+	if err != nil {
+		fmt.Printf("mongo index error: %s", err.Error())
 		return err
 	}
 	return nil

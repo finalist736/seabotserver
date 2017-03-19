@@ -1,7 +1,7 @@
 package seabotserver
 
 type QueueData struct {
-	Bot  *TcpBot
+	Bot  BotService
 	Bvb  *FBBvb
 	Exit bool
 }

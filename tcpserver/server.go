@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/finalist736/seabotserver"
+	"github.com/finalist736/seabotserver/tcpserver/bots/tcp"
 )
 
 type Server struct {
-	seabotserver.TcpServer
+	Listener     net.Listener
+	ClientsCount int64
 }
 
 func NewServer() *Server {
@@ -33,8 +34,8 @@ func (s *Server) acceptConnections() {
 			continue
 		}
 		fmt.Printf("connected: %v\n", c.RemoteAddr())
-		bot := seabotserver.NewTcpBot(c)
-		go handle(bot)
-		go sender(bot)
+		bot := tcp.NewBot(c)
+		go bot.Sender()
+		go bot.Handler()
 	}
 }

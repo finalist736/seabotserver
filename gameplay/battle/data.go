@@ -3,7 +3,7 @@ package battle
 import "github.com/finalist736/seabotserver"
 
 type BattleChannelData struct {
-	Bot  *seabotserver.TcpBot
+	Bot  seabotserver.BotService
 	Turn *seabotserver.FBTurn
 	Exit bool
 }
@@ -16,8 +16,8 @@ type Ship struct {
 type Battle struct {
 	ID int64
 
-	Bot1 *seabotserver.TcpBot
-	Bot2 *seabotserver.TcpBot
+	Bot1 seabotserver.BotService
+	Bot2 seabotserver.BotService
 
 	BattleChannel chan *BattleChannelData
 

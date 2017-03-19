@@ -3,12 +3,14 @@ package battle
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/finalist736/seabotserver"
 )
 
 func Create(q1, q2 *seabotserver.QueueData) {
 	nb := NewBattle()
+
 	nb.Bot1 = q1.Bot
 	nb.Bot2 = q2.Bot
 
@@ -41,26 +43,26 @@ func Create(q1, q2 *seabotserver.QueueData) {
 	//fmt.Printf("%+v\n", nb.Ships2)
 
 	// response init
-	tb := seabotserver.ToBot{}
+	tb := &seabotserver.ToBot{}
 	tb.Bvb = &seabotserver.TBBvb{}
 	// to first bot
-	tb.Bvb.ID = q2.Bot.DBBot.ID
+	tb.Bvb.ID = q2.Bot.DBBot().ID
 	tb.Bvb.Name = fmt.Sprintf("bot_%d", tb.Bvb.ID)
 	tb.Bvb.Ships = FormatShips(nb.Pole1)
 	q1.Bot.Send(tb)
 	// to second bot
-	tb.Bvb.ID = q1.Bot.DBBot.ID
+	tb.Bvb.ID = q1.Bot.DBBot().ID
 	tb.Bvb.Name = fmt.Sprintf("bot_%d", tb.Bvb.ID)
 	tb.Bvb.Ships = FormatShips(nb.Pole2)
 	q2.Bot.Send(tb)
 
-	q1.Bot.Battle = nb
-	q2.Bot.Battle = nb
+	q1.Bot.SetBattle(nb)
+	q2.Bot.SetBattle(nb)
 
 	if rand.Int31n(2) == 0 {
-		nb.CurrentTurnID = q1.Bot.DBBot.ID
+		nb.CurrentTurnID = q1.Bot.DBBot().ID
 	} else {
-		nb.CurrentTurnID = q2.Bot.DBBot.ID
+		nb.CurrentTurnID = q2.Bot.DBBot().ID
 	}
 
 	tb.Bvb = nil
@@ -72,13 +74,16 @@ func Create(q1, q2 *seabotserver.QueueData) {
 	nb.Log.Sides[0] = &seabotserver.LogSides{}
 	nb.Log.Sides[1] = &seabotserver.LogSides{}
 
-	nb.Log.Sides[0].ID = nb.Bot1.DBBot.ID
+	nb.Log.Sides[0].ID = nb.Bot1.DBBot().ID
 	nb.Log.Sides[0].Name = "test"
 	nb.Log.Sides[0].Sea = FormatShips(nb.Pole1)
 
-	nb.Log.Sides[1].ID = nb.Bot2.DBBot.ID
+	nb.Log.Sides[1].ID = nb.Bot2.DBBot().ID
 	nb.Log.Sides[1].Name = "test2"
 	nb.Log.Sides[1].Sea = FormatShips(nb.Pole2)
+
+	nb.Log.StartTime = time.Now().Unix()
+	nb.Log.BattleID = 1 // TODO replace with db id
 
 	go nb.Listener()
 }

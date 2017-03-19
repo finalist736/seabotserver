@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/finalist736/seabotserver/config"
+	"github.com/finalist736/seabotserver/storage/config"
 	"github.com/finalist736/seabotserver/tcpserver"
 	"github.com/pkg/profile"
 )

@@ -1,17 +1,72 @@
-package tcpserver
+package tcp
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 
 	"github.com/finalist736/seabotserver"
-	"github.com/finalist736/seabotserver/battle"
-	"github.com/finalist736/seabotserver/queue"
-	"github.com/finalist736/seabotserver/router"
+	"github.com/finalist736/seabotserver/gameplay/battle"
+	"github.com/finalist736/seabotserver/gameplay/queue"
+	"github.com/finalist736/seabotserver/service/router"
 )
 
-func sender(p *seabotserver.TcpBot) {
-	defer p.Close()
+type TcpBot struct {
+	net.Conn
+
+	dbbot *seabotserver.DBBot
+	btl   interface{}
+
+	sendChannel chan []byte
+	Done        chan bool
+	bfr         []byte
+}
+
+func NewBot(c net.Conn) seabotserver.BotService {
+	bot := &TcpBot{}
+	bot.dbbot = &seabotserver.DBBot{}
+	bot.Conn = c
+	bot.sendChannel = make(chan []byte, 2)
+	bot.Done = make(chan bool, 2)
+	bot.bfr = make([]byte, 0)
+	return bot
+}
+
+func (s *TcpBot) Battle() interface{} {
+	return s.btl
+}
+
+func (s *TcpBot) SetBattle(b interface{}) {
+	s.btl = b
+}
+
+func (s *TcpBot) DBBot() *seabotserver.DBBot {
+	return s.dbbot
+}
+
+func (s *TcpBot) SetDBBot(b *seabotserver.DBBot) {
+	s.dbbot = b
+}
+
+func (s *TcpBot) Send(d interface{}) {
+	ba, err := json.Marshal(d)
+	if err != nil {
+		return
+	}
+	s.sendChannel <- ba
+}
+
+func (s *TcpBot) SendError(err string) {
+	s.Send(&seabotserver.ToBot{Error: &seabotserver.TBError{Error: err}})
+}
+
+func (s *TcpBot) Disconnect() {
+	s.Done <- true
+}
+
+func (p *TcpBot) Sender() {
+	defer p.Conn.Close()
 	defer func() { fmt.Printf("sender close: %v\n", p.RemoteAddr()) }()
 	var err error
 	var n int
@@ -23,7 +78,7 @@ func sender(p *seabotserver.TcpBot) {
 		select {
 		case <-p.Done:
 			return
-		case msg := <-p.SendChannel:
+		case msg := <-p.sendChannel:
 
 			size = len(msg)
 			send_buff = make([]byte, 0)
@@ -56,14 +111,14 @@ func sender(p *seabotserver.TcpBot) {
 	}
 }
 
-func handle(p *seabotserver.TcpBot) {
+func (p *TcpBot) Handler() {
 	defer func() { fmt.Printf("handler close: %v\n", p.RemoteAddr()) }()
 	defer func() { queue.Exit(p) }()
 	defer func() {
-		if p.Battle == nil {
+		if p.Battle() == nil {
 			return
 		}
-		btl := p.Battle.(*battle.Battle)
+		btl := p.Battle().(*battle.Battle)
 		if btl == nil {
 			return
 		}
@@ -74,6 +129,7 @@ func handle(p *seabotserver.TcpBot) {
 	var numbytes, tmp_numbytes, size, atempts int
 	var err error
 	numbytes = 0
+	fbot := &seabotserver.FromBot{}
 	for {
 		select {
 		case <-p.Done:
@@ -109,10 +165,10 @@ func handle(p *seabotserver.TcpBot) {
 				continue
 			}
 
-			p.Buffer = make([]byte, size)
+			p.bfr = make([]byte, size)
 			numbytes = 0
 			for {
-				tmp_numbytes, err = p.Read(p.Buffer[numbytes:])
+				tmp_numbytes, err = p.Read(p.bfr[numbytes:])
 				if err != nil {
 					if err != io.EOF {
 						fmt.Printf("data read error: %s\n", err.Error())
@@ -126,7 +182,15 @@ func handle(p *seabotserver.TcpBot) {
 				}
 				break
 			}
-			router.Dispatch(p)
+
+			err = json.Unmarshal(p.bfr, fbot)
+			if err != nil {
+				fmt.Printf("json parse error: %s\n", err)
+				p.Disconnect()
+				return
+			}
+
+			router.Dispatch(p, fbot)
 			//p.SetReadDeadline(time.Now().Add(time.Second * 5))
 		}
 	}
