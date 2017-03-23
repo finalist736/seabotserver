@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/finalist736/seabotserver"
+	"github.com/finalist736/seabotserver/storage/database/dbsql"
 	"github.com/finalist736/seabotserver/storage/logs/mongodb"
 )
 
@@ -151,10 +152,19 @@ func (s *Battle) Listener() {
 					// save battle result to log
 					s.Log.Winner = tbEnd.End.Winner
 					s.Log.EndTime = time.Now().Unix()
-					//logs.SaveToMongoDB(s.Log)
+					// statistics save to DB
 					logserv := mongodb.NewLoggingService()
 					logserv.Store(s.Log)
-					// statistics save to DB
+					// sandbox counters
+					var dbsbx *seabotserver.DBSandbox
+					sbservice := dbsql.NewDBSandboxService()
+					dbsbx = sbservice.Get(data.Bot.DBBot().ID)
+					dbsbx.Wins++
+					sbservice.Store(dbsbx)
+					dbsbx = sbservice.Get(opponent.DBBot().ID)
+					dbsbx.Loses++
+					sbservice.Store(dbsbx)
+
 					return
 				} else {
 					// send next turn
