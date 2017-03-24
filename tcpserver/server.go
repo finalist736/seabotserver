@@ -33,7 +33,7 @@ func (s *Server) acceptConnections() {
 		if err != nil {
 			continue
 		}
-		fmt.Printf("connected: %v\n", c.RemoteAddr())
+		//fmt.Printf("connected: %v\n", c.RemoteAddr())
 		bot := tcp.NewBot(c)
 		go bot.Sender()
 		go bot.Handler()

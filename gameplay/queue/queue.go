@@ -26,10 +26,10 @@ func channelHandler() {
 			if data.Bot.DBBot == nil {
 				continue
 			}
-			fmt.Printf("1 queue: %v\n", data.Bot.DBBot().ID)
+			//fmt.Printf("1 queue: %v\n", data.Bot.DBBot().ID)
 			switch data.Exit {
 			case true:
-				fmt.Printf("2 queue exit: %v\n", data.Bot.DBBot().ID)
+				//fmt.Printf("2 queue exit: %v\n", data.Bot.DBBot().ID)
 				if first == nil {
 					continue
 				}
@@ -44,7 +44,7 @@ func channelHandler() {
 				if data.Bot == nil || data.Bvb == nil {
 					continue
 				}
-				fmt.Printf("2 queue set: %v\n", data.Bot.DBBot().ID)
+				//fmt.Printf("2 queue set: %v\n", data.Bot.DBBot().ID)
 				// queue is empty let set bot!
 				if first == nil {
 					fmt.Printf("3 queue first: %v\n", data.Bot.DBBot().ID)
@@ -55,13 +55,13 @@ func channelHandler() {
 					tb.Bvb.Wait = 1
 					data.Bot.Send(tb)
 				} else {
-					fmt.Printf("4 queue second: %v\n", data.Bot.DBBot().ID)
+					//fmt.Printf("4 queue second: %v\n", data.Bot.DBBot().ID)
 					if first.Bot.DBBot().ID == data.Bot.DBBot().ID {
-						fmt.Printf("4 same bot.. ignoring: %v\n", data.Bot.DBBot().ID)
+						//fmt.Printf("4 same bot.. ignoring: %v\n", data.Bot.DBBot().ID)
 						continue
 					}
 					battle.Create(first, data)
-					fmt.Printf("4 queue created : %v + %v\n", data.Bot.DBBot().ID, first.Bot.DBBot().ID)
+					//fmt.Printf("4 queue created : %v + %v\n", data.Bot.DBBot().ID, first.Bot.DBBot().ID)
 					first = nil
 				}
 			}

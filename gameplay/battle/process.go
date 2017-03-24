@@ -19,6 +19,7 @@ func (s *Battle) Exit(bot seabotserver.BotService) {
 
 func (s *Battle) Listener() {
 	var data *BattleChannelData
+	var lastActive time.Time = time.Now()
 	timer := time.Tick(time.Second * 10)
 	tb := &seabotserver.ToBot{}
 	tb.Turn = &seabotserver.TBTurn{}
@@ -35,6 +36,7 @@ func (s *Battle) Listener() {
 	for {
 		select {
 		case data = <-s.BattleChannel:
+			lastActive = time.Now()
 			switch data.Exit {
 			case true:
 				// need to close this battle!
@@ -193,8 +195,13 @@ func (s *Battle) Listener() {
 					s.Bot2.Send(tbNextTurn)
 				}
 			}
-		case <-timer:
-			//fmt.Println("tick")
+		case tick := <-timer:
+			//fmt.Printf("tick: %s; diff: %s\n", tick, tick.Sub(lastActive))
+			if tick.Sub(lastActive) > time.Minute*60 {
+				// check and set lose guilty
+				fmt.Printf("%d - timeout GUILTY\n", s.CurrentTurnID)
+				return
+			}
 		}
 	}
 }

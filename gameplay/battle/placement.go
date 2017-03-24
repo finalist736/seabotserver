@@ -102,7 +102,7 @@ func PlaceShips() (*[10][10]int, *[10]*Ship) {
 		ships[i] = ship
 	}
 
-	fmt.Printf("failsCount: %v\n", failsCount)
+	//fmt.Printf("failsCount: %v\n", failsCount)
 	return pole, ships
 }
 

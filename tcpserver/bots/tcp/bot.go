@@ -2,7 +2,6 @@ package tcp
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net"
 
@@ -67,7 +66,7 @@ func (s *TcpBot) Disconnect() {
 
 func (p *TcpBot) Sender() {
 	defer p.Conn.Close()
-	defer func() { fmt.Printf("sender close: %v\n", p.RemoteAddr()) }()
+	//defer func() { fmt.Printf("sender close: %v\n", p.RemoteAddr()) }()
 	var err error
 	var n int
 
@@ -97,7 +96,7 @@ func (p *TcpBot) Sender() {
 				n, err = p.Write(send_buff[total:])
 				total += n
 				if err != nil {
-					fmt.Printf("read error: %s\n", err.Error())
+					//fmt.Printf("read error: %s\n", err.Error())
 					// TODO
 					// logging
 					p.Disconnect()
@@ -112,7 +111,7 @@ func (p *TcpBot) Sender() {
 }
 
 func (p *TcpBot) Handler() {
-	defer func() { fmt.Printf("handler close: %v\n", p.RemoteAddr()) }()
+	//defer func() { fmt.Printf("handler close: %v\n", p.RemoteAddr()) }()
 	defer func() { queue.Exit(p) }()
 	defer func() {
 		if p.Battle() == nil {
@@ -140,7 +139,7 @@ func (p *TcpBot) Handler() {
 				tmp_numbytes, err = p.Read(tmp_buffer)
 				if err != nil {
 					if err != io.EOF {
-						fmt.Printf("4 bytes read error: %s\n", err.Error())
+						//fmt.Printf("4 bytes read error: %s\n", err.Error())
 					}
 					p.Disconnect()
 					return
@@ -171,7 +170,7 @@ func (p *TcpBot) Handler() {
 				tmp_numbytes, err = p.Read(p.bfr[numbytes:])
 				if err != nil {
 					if err != io.EOF {
-						fmt.Printf("data read error: %s\n", err.Error())
+						//fmt.Printf("data read error: %s\n", err.Error())
 					}
 					p.Disconnect()
 					return
@@ -185,7 +184,7 @@ func (p *TcpBot) Handler() {
 
 			err = json.Unmarshal(p.bfr, fbot)
 			if err != nil {
-				fmt.Printf("json parse error: %s\n", err)
+				//fmt.Printf("json parse error: %s\n", err)
 				p.Disconnect()
 				return
 			}

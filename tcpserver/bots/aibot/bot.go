@@ -1,7 +1,6 @@
 package aibot
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/finalist736/seabotserver"
@@ -59,7 +58,7 @@ func (s *AIBot) Send(d interface{}) {
 		return
 	}
 	if tb.End != nil {
-		fmt.Printf("end: %+v\n", tb.End)
+		//fmt.Printf("end: %+v\n", tb.End)
 		return
 	}
 	if tb.Turn == nil {
