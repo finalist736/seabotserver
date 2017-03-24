@@ -24,8 +24,6 @@ func (s *SandboxService) Get(botid int64) *seabotserver.DBSandbox {
 		}
 		record.Bot = botid
 		record.Last = time.Now().Unix()
-		record.Wins = 0
-		record.Loses = 0
 		_, err = session().InsertInto("sandbox").
 			Columns("bot", "wins", "loses", "last").
 			Record(record).Exec()
@@ -37,6 +35,7 @@ func (s *SandboxService) Get(botid int64) *seabotserver.DBSandbox {
 }
 
 func (s *SandboxService) Store(sb *seabotserver.DBSandbox) error {
+	sb.Last = time.Now().Unix()
 	_, err := session().Update("sandbox").
 		Set("wins", sb.Wins).Set("loses", sb.Loses).
 		Set("last", sb.Last).Where("`bot`=?", sb.Bot).Exec()

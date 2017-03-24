@@ -156,14 +156,28 @@ func (s *Battle) Listener() {
 					logserv := mongodb.NewLoggingService()
 					logserv.Store(s.Log)
 					// sandbox counters
-					var dbsbx *seabotserver.DBSandbox
-					sbservice := dbsql.NewDBSandboxService()
-					dbsbx = sbservice.Get(data.Bot.DBBot().ID)
-					dbsbx.Wins++
-					sbservice.Store(dbsbx)
-					dbsbx = sbservice.Get(opponent.DBBot().ID)
-					dbsbx.Loses++
-					sbservice.Store(dbsbx)
+					if data.Bot.DBBot().ID < 0 || opponent.DBBot().ID < 0 {
+
+						id := data.Bot.DBBot().ID
+						if id < 0 {
+							id = opponent.DBBot().ID
+						}
+						if id > 0 {
+							bvsaiService := dbsql.NewDBBVsaiService()
+							bvsaiData := bvsaiService.Get(id)
+							bvsaiData.Bvr++
+							bvsaiService.Store(bvsaiData)
+						}
+					} else {
+						var dbsbx *seabotserver.DBSandbox
+						sbservice := dbsql.NewDBSandboxService()
+						dbsbx = sbservice.Get(data.Bot.DBBot().ID)
+						dbsbx.Wins++
+						sbservice.Store(dbsbx)
+						dbsbx = sbservice.Get(opponent.DBBot().ID)
+						dbsbx.Loses++
+						sbservice.Store(dbsbx)
+					}
 
 					return
 				} else {

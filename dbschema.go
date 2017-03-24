@@ -25,3 +25,14 @@ type DBSandboxService interface {
 	Get(botid int64) *DBSandbox // return sandox record for botID, if not exists - return default
 	Store(*DBSandbox) error     // saves data to database, changes Last to now
 }
+
+type DBVsai struct {
+	Bot int64 `db:"bot"`
+	Bvr int64 `db:"bvr"`
+	Bvl int64 `db:"bvl"`
+}
+
+type DBVsaiService interface {
+	Get(botid int64) *DBVsai
+	Store(*DBVsai) error
+}
