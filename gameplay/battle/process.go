@@ -146,8 +146,8 @@ func (s *Battle) Listener() {
 					s.Bot1.SetBattle(nil)
 					s.Bot2.SetBattle(nil)
 
-					s.Bot1.Disconnect()
-					s.Bot2.Disconnect()
+					//s.Bot1.Disconnect()
+					//s.Bot2.Disconnect()
 
 					// save battle result to log
 					s.Log.Winner = tbEnd.End.Winner

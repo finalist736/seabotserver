@@ -87,7 +87,9 @@ func (s *AIBot) Send(d interface{}) {
 	var shot *seabotserver.FBTurn
 	ln := len(s.trns)
 	if ln > 0 {
-		shot = s.trns[rand.Intn(ln)]
+		item := rand.Intn(ln)
+		shot = s.trns[item]
+		s.trns = append(s.trns[:item], s.trns[item+1:]...)
 	} else {
 		shot = &seabotserver.FBTurn{[2]int{0, 0}}
 	}
