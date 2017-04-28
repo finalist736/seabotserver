@@ -124,10 +124,10 @@ func (p *TcpBot) Handler() {
 		btl.Exit(p)
 	}()
 
-	tmp_buffer := make([]byte, 4)
+	var tmp_buffer [4]byte
 	var numbytes, tmp_numbytes, size, atempts int
 	var err error
-	numbytes = 0
+
 	fbot := &seabotserver.FromBot{}
 	for {
 		select {
@@ -135,8 +135,9 @@ func (p *TcpBot) Handler() {
 			return
 		default:
 			// set read deadline for pvp battle or pve battle
+			numbytes = 0
 			for {
-				tmp_numbytes, err = p.Read(tmp_buffer)
+				tmp_numbytes, err = p.Read(tmp_buffer[numbytes:])
 				if err != nil {
 					if err != io.EOF {
 						//fmt.Printf("4 bytes read error: %s\n", err.Error())
