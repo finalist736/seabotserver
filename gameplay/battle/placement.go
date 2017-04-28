@@ -193,21 +193,27 @@ func FormatShips(pole *[10][10]int) *[100]int {
 }
 
 func PrintPole(pole *[10][10]int, id int64) {
-	fmt.Printf("____%d______\n", id)
+	fmt.Printf(" ——————PlayerID: %3d———¬\n", id)
+	fmt.Printf(" %c", 37)
 	for i := 0; i < 10; i++ {
+		fmt.Printf("%2d", i)
+	}
+	fmt.Println(" |")
+	for i := 0; i < 10; i++ {
+		fmt.Printf("%2d", i)
 		for j := 0; j < 10; j++ {
 			f := pole[i][j]
 			if f == 0 {
-				fmt.Printf(" - ")
+				fmt.Print(" ·")
 			} else if f == -10 {
-				fmt.Printf(" - ")
+				fmt.Print(" ·")
 			} else if f < 0 {
-				fmt.Printf("X")
+				fmt.Print(" X")
 			} else {
-				fmt.Printf("%c", 35)
+				fmt.Printf(" %c", 35)
 			}
 		}
-		fmt.Printf("|\n")
+		fmt.Print(" |\n")
 	}
-	fmt.Printf("----------\n")
+	fmt.Print(" -----------------------\n")
 }

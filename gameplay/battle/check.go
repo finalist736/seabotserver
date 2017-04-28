@@ -1,7 +1,7 @@
 package battle
 
 func checkFleet(pole *[10][10]int) bool {
-	var result bool = true
+	var result = true
 	for i := 0; i < 10; i++ {
 		for j := 0; j < 10; j++ {
 			//fmt.Printf("%d", pole[i][j])
@@ -18,63 +18,34 @@ func checkFleet(pole *[10][10]int) bool {
 }
 
 func checkShipDestroy(pole *[10]*Ship, shot [2]int, p int) int {
+	if p <= 0 {
+		return -1
+	}
 
-	switch p {
-	case 4:
-		ship := pole[0]
+	for _, ship := range pole {
+
 		for i, place := range ship.Place {
-			if place == shot {
-				ship.Place = append(ship.Place[:i], ship.Place[i+1:]...)
-			}
-			if len(ship.Place) == 0 {
-				return 2
-			} else {
-				return 1
-			}
-		}
-	case 3:
-		for c := 1; c < 3; c++ {
-			ship := pole[c]
-			for i, place := range ship.Place {
-				if place == shot {
-					ship.Place = append(ship.Place[:i], ship.Place[i+1:]...)
-					if len(ship.Place) == 0 {
-						return 2
-					} else {
-						return 1
-					}
-				}
-			}
-		}
-	case 2:
-		for c := 3; c < 6; c++ {
-			ship := pole[c]
-			for i, place := range ship.Place {
-				if place == shot {
-					ship.Place = append(ship.Place[:i], ship.Place[i+1:]...)
-					if len(ship.Place) == 0 {
-						return 2
-					} else {
-						return 1
-					}
-				}
-			}
-		}
-	case 1:
-		for c := 6; c < 10; c++ {
-			ship := pole[c]
 			if len(ship.Place) == 0 {
 				continue
 			}
-			if ship.Place[0] == shot {
-				ship.Place = make([][2]int, 0)
-				if len(ship.Place) == 0 {
-					return 2
+
+			if place == shot {
+				if len(ship.Place) == 1 {
+					ship.Place = make([][2]int, 0)
 				} else {
-					return 1
+					ship.Place = append(ship.Place[:i], ship.Place[i+1:]...)
 				}
+			} else {
+				continue
 			}
+
+			if len(ship.Place) == 0 {
+				return 2
+			}
+
+			return 1
 		}
 	}
+
 	return -1
 }
